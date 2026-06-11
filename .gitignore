@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Java/Spring
+target/
+*.class
+
+# IDE
+.idea/
+.vscode/
+.DS_Store
+
+# Data files
+ml-32m/
+movie-reviews-pipeline/data/raw/
+data/raw/
+*.csv
+*.json
+*.parquet
+*.zip
