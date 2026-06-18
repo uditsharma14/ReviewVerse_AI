@@ -23,7 +23,9 @@ QDRANT_HOST = "localhost"
 QDRANT_PORT = 6333
 
 # Use the same Qdrant collection name where you saved movie and Amazon vectors.
-COLLECTION_NAME = "reviewverse_movie_review_vectors"
+MOVIE_COLLECTION_NAME = "reviewverse_movie_review_vectors"
+AMAZON_COLLECTION_NAME = "reviewverse_amazon_review_vectors"
+
 
 qdrant_client = QdrantClient(
     host=QDRANT_HOST,
@@ -95,7 +97,7 @@ def search_movies(
     query_vector = create_embedding(query)
 
     results = qdrant_client.query_points(
-        collection_name=COLLECTION_NAME,
+        collection_name=MOVIE_COLLECTION_NAME,
         query=query_vector,
         query_filter=Filter(
             must=[
@@ -148,7 +150,7 @@ def search_amazon_reviews(
     query_vector = create_embedding(query)
 
     results = qdrant_client.query_points(
-        collection_name=COLLECTION_NAME,
+        collection_name=AMAZON_COLLECTION_NAME,
         query=query_vector,
         query_filter=Filter(
             must=[
