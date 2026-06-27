@@ -771,41 +771,6 @@ docker logs review-app-postgres
 
 ---
 
-# Troubleshooting
-
-## Connection Refused
-
-If you receive the following error:
-
-```text
-connection refused
-```
-
-Verify the container is running:
-
-```bash
-docker ps
-```
-
-If it is stopped, start it:
-
-```bash
-docker start review-app-postgres
-```
-
----
-
-## Port 5432 Already in Use
-
-Check which process is using port `5432`.
-
-```bash
-lsof -i :5432
-```
-
-Stop the existing PostgreSQL service or change the Docker port mapping if necessary.
-
----
 
 # Database Configuration
 
@@ -1007,38 +972,8 @@ docker restart review-app-qdrant
 ```bash
 docker logs review-app-qdrant
 ```
-
 ---
 
-# Troubleshooting
-
-## Unable to Connect to Qdrant
-
-Verify that the container is running:
-
-```bash
-docker ps
-```
-
-If the container is stopped:
-
-```bash
-docker start review-app-qdrant
-```
-
----
-
-## Port 6333 Already in Use
-
-Check which process is using the port:
-
-```bash
-lsof -i :6333
-```
-
-Stop the conflicting process or change the Docker port mapping.
-
----
 
 # Project Configuration
 
