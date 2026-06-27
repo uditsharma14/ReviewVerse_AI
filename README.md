@@ -603,6 +603,484 @@ ReviewVerse AI – Hybrid Movie and Product Recommendation Platform
 
 ---
 
+
+
+# Prerequisites
+
+* Docker Desktop installed and running
+* macOS, Windows, or Linux
+* Terminal access
+
+
+# PostgreSQL Docker Setup Guide
+
+This guide explains how to install, run, and connect to a PostgreSQL database using Docker for the ReviewVerse project.
+
+---
+
+Verify Docker installation:
+
+```bash
+docker --version
+docker ps
+```
+---
+
+# Step 1: Pull PostgreSQL Image
+
+Download the PostgreSQL 16 Docker image.
+
+```bash
+docker pull postgres:16
+```
+
+---
+
+# Step 2: Create and Run PostgreSQL Container
+
+Run the following command to create and start the PostgreSQL container.
+
+```bash
+docker run --name review-app-postgres \
+  -e POSTGRES_USER=review_user \
+  -e POSTGRES_PASSWORD=review_pass123 \
+  -e POSTGRES_DB=review_app \
+  -p 5432:5432 \
+  -d postgres:16
+```
+
+**Parameter Description**
+
+| Parameter           | Description                               |
+| ------------------- | ----------------------------------------- |
+| `--name`            | Docker container name                     |
+| `POSTGRES_USER`     | Database username                         |
+| `POSTGRES_PASSWORD` | Database password                         |
+| `POSTGRES_DB`       | Database name                             |
+| `-p 5432:5432`      | Maps PostgreSQL port to the local machine |
+| `-d`                | Runs the container in detached mode       |
+
+---
+
+# Step 3: Verify Container
+
+Check whether the PostgreSQL container is running.
+
+```bash
+docker ps
+```
+
+Expected output:
+
+```text
+CONTAINER ID   IMAGE         PORTS                     NAMES
+xxxxxxxxxxxx   postgres:16   0.0.0.0:5432->5432/tcp    review-app-postgres
+```
+
+---
+
+# Step 4: Connect to PostgreSQL
+
+Open the PostgreSQL terminal inside the Docker container.
+
+```bash
+docker exec -it review-app-postgres psql -U review_user -d review_app
+```
+
+---
+
+# Step 5: Verify the Database
+
+List all tables:
+
+```sql
+\dt
+```
+
+List all databases:
+
+```sql
+\l
+```
+
+Display the current database:
+
+```sql
+SELECT current_database();
+```
+
+Exit PostgreSQL:
+
+```sql
+\q
+```
+
+---
+
+# Step 6: Connect from Python
+
+Use the following SQLAlchemy connection string.
+
+```python
+from sqlalchemy import create_engine
+
+DB_CONNECTION = "postgresql://review_user:review_pass123@localhost:5432/review_app"
+
+engine = create_engine(DB_CONNECTION)
+```
+
+---
+
+# Step 7: Useful Docker Commands
+
+### View running containers
+
+```bash
+docker ps
+```
+
+### View all containers
+
+```bash
+docker ps -a
+```
+
+### Start PostgreSQL
+
+```bash
+docker start review-app-postgres
+```
+
+### Stop PostgreSQL
+
+```bash
+docker stop review-app-postgres
+```
+
+### Restart PostgreSQL
+
+```bash
+docker restart review-app-postgres
+```
+
+### View container logs
+
+```bash
+docker logs review-app-postgres
+```
+
+---
+
+# Troubleshooting
+
+## Connection Refused
+
+If you receive the following error:
+
+```text
+connection refused
+```
+
+Verify the container is running:
+
+```bash
+docker ps
+```
+
+If it is stopped, start it:
+
+```bash
+docker start review-app-postgres
+```
+
+---
+
+## Port 5432 Already in Use
+
+Check which process is using port `5432`.
+
+```bash
+lsof -i :5432
+```
+
+Stop the existing PostgreSQL service or change the Docker port mapping if necessary.
+
+---
+
+# Database Configuration
+
+| Property     | Value          |
+| ------------ | -------------- |
+| Database     | review_app     |
+| Username     | ****    |
+| Password     | **** |
+| Host         | localhost      |
+| Port         | 5432           |
+| Docker Image | postgres:16    |
+
+---
+
+
+# Qdrant Docker Setup Guide
+
+This guide explains how to install, run, and connect to a Qdrant Vector Database using Docker for the ReviewVerse project.
+
+---
+
+# Prerequisites
+
+* Docker Desktop installed and running
+* macOS, Windows, or Linux
+* Terminal access
+
+Verify Docker installation:
+
+```bash
+docker --version
+docker ps
+```
+
+---
+
+# Step 1: Pull the Qdrant Docker Image
+
+Download the latest Qdrant image.
+
+```bash
+docker pull qdrant/qdrant
+```
+
+---
+
+# Step 2: Create and Run the Qdrant Container
+
+Run the following command to create and start the Qdrant container.
+
+```bash
+docker run -d \
+  --name review-app-qdrant \
+  -p 6333:6333 \
+  -p 6334:6334 \
+  qdrant/qdrant
+```
+
+**Parameter Description**
+
+| Parameter      | Description                         |
+| -------------- | ----------------------------------- |
+| `--name`       | Docker container name               |
+| `-p 6333:6333` | REST API port                       |
+| `-p 6334:6334` | gRPC API port                       |
+| `-d`           | Runs the container in detached mode |
+
+---
+
+# Step 3: Verify Container
+
+Check whether the Qdrant container is running.
+
+```bash
+docker ps
+```
+
+Expected output:
+
+```text
+CONTAINER ID   IMAGE             PORTS                                      NAMES
+xxxxxxxxxxxx   qdrant/qdrant     0.0.0.0:6333->6333/tcp,6334->6334/tcp      review-app-qdrant
+```
+
+---
+
+# Step 4: Verify Qdrant is Running
+
+Open the following URL in your browser:
+
+```
+http://localhost:6333/dashboard
+```
+
+Or check the service using:
+
+```bash
+curl http://localhost:6333
+```
+
+Expected response:
+
+```json
+{
+  "title": "qdrant - vector search engine"
+}
+```
+
+---
+
+# Step 5: Connect from Python
+
+Install the Qdrant Python client:
+
+```bash
+pip install qdrant-client
+```
+
+Create a client connection:
+
+```python
+from qdrant_client import QdrantClient
+
+qdrant_client = QdrantClient(
+    host="localhost",
+    port=6333
+)
+```
+
+---
+
+# Step 6: Create a Collection
+
+Example:
+
+```python
+from qdrant_client.models import Distance, VectorParams
+
+qdrant_client.create_collection(
+    collection_name="reviewverse_common_review_vectors",
+    vectors_config=VectorParams(
+        size=384,
+        distance=Distance.COSINE
+    )
+)
+```
+
+* **Collection Name:** `reviewverse_common_review_vectors`
+* **Embedding Size:** `384` (for `all-MiniLM-L6-v2`)
+* **Distance Metric:** `COSINE`
+
+---
+
+# Step 7: Verify Collections
+
+List all collections:
+
+```python
+collections = qdrant_client.get_collections()
+print(collections)
+```
+
+---
+
+# Step 8: Useful Docker Commands
+
+### View running containers
+
+```bash
+docker ps
+```
+
+### View all containers
+
+```bash
+docker ps -a
+```
+
+### Start Qdrant
+
+```bash
+docker start review-app-qdrant
+```
+
+### Stop Qdrant
+
+```bash
+docker stop review-app-qdrant
+```
+
+### Restart Qdrant
+
+```bash
+docker restart review-app-qdrant
+```
+
+### View logs
+
+```bash
+docker logs review-app-qdrant
+```
+
+---
+
+# Troubleshooting
+
+## Unable to Connect to Qdrant
+
+Verify that the container is running:
+
+```bash
+docker ps
+```
+
+If the container is stopped:
+
+```bash
+docker start review-app-qdrant
+```
+
+---
+
+## Port 6333 Already in Use
+
+Check which process is using the port:
+
+```bash
+lsof -i :6333
+```
+
+Stop the conflicting process or change the Docker port mapping.
+
+---
+
+# Project Configuration
+
+| Property        | Value                             |
+| --------------- | --------------------------------- |
+| Service         | Qdrant                            |
+| Container Name  | review-app-qdrant                 |
+| REST Port       | 6333                              |
+| gRPC Port       | 6334                              |
+| Embedding Model | all-MiniLM-L6-v2                  |
+| Vector Size     | 384                               |
+| Distance Metric | COSINE                            |
+| Collection Name | reviewverse_common_review_vectors |
+
+---
+
+# Project Workflow
+
+1. Start Docker Desktop.
+2. Pull the Qdrant Docker image.
+3. Create and run the Qdrant container.
+4. Verify the service is running.
+5. Connect using the Python Qdrant client.
+6. Create the vector collection.
+7. Generate embeddings using Sentence Transformers.
+8. Store vectors in Qdrant.
+9. Perform semantic search through the FastAPI APIs.
+
+# Project Workflow
+
+1. Start Docker Desktop.
+2. Pull the PostgreSQL Docker image.
+3. Create and run the PostgreSQL container.
+4. Verify the container is running.
+5. Connect to PostgreSQL using `psql`.
+6. Load the MovieLens and Amazon datasets into PostgreSQL.
+7. Generate embeddings using Sentence Transformers.
+8. Store embeddings in the Qdrant vector database.
+9. Query the data through the FastAPI application and RAG pipeline.
+
+
+
 ## Author
 
 **Udit Sharma**
