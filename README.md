@@ -731,46 +731,6 @@ engine = create_engine(DB_CONNECTION)
 
 ---
 
-# Step 7: Useful Docker Commands
-
-### View running containers
-
-```bash
-docker ps
-```
-
-### View all containers
-
-```bash
-docker ps -a
-```
-
-### Start PostgreSQL
-
-```bash
-docker start review-app-postgres
-```
-
-### Stop PostgreSQL
-
-```bash
-docker stop review-app-postgres
-```
-
-### Restart PostgreSQL
-
-```bash
-docker restart review-app-postgres
-```
-
-### View container logs
-
-```bash
-docker logs review-app-postgres
-```
-
----
-
 
 # Database Configuration
 
@@ -934,46 +894,6 @@ print(collections)
 ```
 
 ---
-
-# Step 8: Useful Docker Commands
-
-### View running containers
-
-```bash
-docker ps
-```
-
-### View all containers
-
-```bash
-docker ps -a
-```
-
-### Start Qdrant
-
-```bash
-docker start review-app-qdrant
-```
-
-### Stop Qdrant
-
-```bash
-docker stop review-app-qdrant
-```
-
-### Restart Qdrant
-
-```bash
-docker restart review-app-qdrant
-```
-
-### View logs
-
-```bash
-docker logs review-app-qdrant
-```
----
-
 
 # Project Configuration
 
