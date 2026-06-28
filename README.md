@@ -745,25 +745,13 @@ engine = create_engine(DB_CONNECTION)
 
 ---
 
+<img width="1512" height="981" alt="image" src="https://github.com/user-attachments/assets/fed44d05-9195-4954-9d49-58f0eebe9bd3" />
+
+
 
 # Qdrant Docker Setup Guide
 
 This guide explains how to install, run, and connect to a Qdrant Vector Database using Docker for the ReviewVerse project.
-
----
-
-# Prerequisites
-
-* Docker Desktop installed and running
-* macOS, Windows, or Linux
-* Terminal access
-
-Verify Docker installation:
-
-```bash
-docker --version
-docker ps
-```
 
 ---
 
@@ -907,6 +895,9 @@ print(collections)
 | Vector Size     | 384                               |
 | Distance Metric | COSINE                            |
 | Collection Name | reviewverse_common_review_vectors |
+
+
+<img width="1512" height="950" alt="image" src="https://github.com/user-attachments/assets/b9564515-4302-4a87-a9ed-38b2fd04f20a" />
 
 ---
 
